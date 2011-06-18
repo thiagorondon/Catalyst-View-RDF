@@ -17,8 +17,7 @@ sub foo : Global {
     my $node2 = $ser->genid;
 
     $c->component('View::RDF');
-    $c->stash(
-        triples => (
+    my @triples = (
             [ 'http://example.com/url#', 'dc:creator', 'zool@example.com' ],
             [ 'http://example.com/url#', 'foaf:Topic', '_id:1234' ],
             [
@@ -32,9 +31,8 @@ sub foo : Global {
             [ $node2, 'rdf:type',   'http://xmlns.com/foaf/0.1/Person' ],
             [ $node2, 'foaf:url',   \'http://server.com/NOT/an/rdf/uri.html' ],
 
-        )
     );
-
+    $c->stash->{triples} = \@triples;
     $c->forward('View::RDF');
 }
 

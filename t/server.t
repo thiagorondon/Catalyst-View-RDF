@@ -6,8 +6,9 @@ use FindBin;
 use lib "$FindBin::Bin/lib";
 
 use Encode;
-use Test::More;
+use Test::More tests => 7;
 use Catalyst::Test 'TestApp';
+use RDF::Simple::Parser;
 
 BEGIN {
     no warnings 'redefine';
@@ -34,7 +35,10 @@ my $entrypoint = "http://localhost/foo";
     is_deeply( [ $response->content_type ],
         [ 'application/rdf', 'charset=utf-8' ] );
 
-    my $data = $response->content;
-    warn $data;
+    ok( my $rdf = $response->content );
+    my $parser = RDF::Simple::Parser->new();
+    ok( my $triples = $parser->parse_rdf($rdf) );
+
+    is( $triples, 9 );
 }
 
